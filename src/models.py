@@ -7,3 +7,4 @@ def train_doc2vec(df, fname='doc2vec.model',vector_size=5, dm=1, window=2, min_c
     model_doc2vec = Doc2Vec(tagged_docs, vector_size=vector_size, dm=dm, window=window,  min_count=min_count, workers=workers, epochs=epochs)
     model_doc2vec.save('../models/'+fname)
     return model_doc2vec
+
