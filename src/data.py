@@ -4,6 +4,7 @@ import numpy as np
 from nltk.tokenize import word_tokenize
 from gensim.models.doc2vec import Doc2Vec, TaggedDocument
 from sklearn.model_selection import train_test_split
+from datasets import Dataset
 
 def get_data(filepath):
     return pd.read_csv(filepath)
@@ -42,3 +43,13 @@ def split_traning_x_y(df, test_perc = 0.25):
 def split_traning(df, test_perc = 0.25):
     train_df, test_df = train_test_split(df, test_size=test_perc, random_state=11, shuffle = True)
     return train_df, test_df
+
+def create_train_test_datasets(test_perc = 0.25):
+    train = get_data('../data/raw/train.csv').fillna('')
+    train['input'] = train['keyword'] + '; ' + train['location'] + "; " + train['text']
+    train_df, test_df = split_traning(train[['input','target']], test_perc)
+    train_df.columns = ['text', 'label']
+    test_df.columns = ['text', 'label']
+    train_ds = Dataset.from_pandas(train_df)
+    test_ds = Dataset.from_pandas(test_df)
+    return train_ds, test_ds
